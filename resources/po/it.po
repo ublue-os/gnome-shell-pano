@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: fill-pot-po/2.2.8\n"
+"X-Generator: fill-pot-po/3.0.5\n"
 
 #: src/components/indicator/clearHistoryDialog.ts:23
 msgid "Cancel"
@@ -10,24 +10,24 @@ msgstr "Annulla"
 #: src/components/indicator/clearHistoryDialog.ts:30
 #: src/prefs/dangerZone/clearHistory.ts:20
 msgid "Clear"
-msgstr "Chiaro"
+msgstr "Cancella"
 
 #: src/components/indicator/clearHistoryDialog.ts:35
-#: src/components/indicator/settingsMenu.ts:94
+#: src/components/indicator/settingsMenu.ts:101
 #: src/prefs/dangerZone/clearHistory.ts:14
 msgid "Clear History"
-msgstr "Cancella cronologia"
+msgstr "Cancella la cronologia"
 
 #: src/components/indicator/clearHistoryDialog.ts:36
 #: src/prefs/dangerZone/clearHistory.ts:26
 msgid "Are you sure you want to clear history?"
 msgstr "Sei sicuro di voler cancellare la cronologia?"
 
-#: src/components/indicator/settingsMenu.ts:61
+#: src/components/indicator/settingsMenu.ts:67
 msgid "Incognito Mode"
 msgstr "Modalità di navigazione in incognito"
 
-#: src/components/indicator/settingsMenu.ts:101
+#: src/components/indicator/settingsMenu.ts:108
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -35,17 +35,17 @@ msgstr "Impostazioni"
 msgid "No Description"
 msgstr "Nessuna descrizione"
 
-#: src/components/searchBox.ts:68
+#: src/components/searchBox.ts:69
 msgid "Type to search, Tab to cycle"
 msgstr "Digita per cercare, Tab per scorrere"
 
 #: src/prefs/customization/codeItemStyle.ts:15
 msgid "Change the style of the code item"
-msgstr "Cambia lo stile dell'elemento di codice"
+msgstr "Cambia lo stile dell'elemento Codice"
 
 #: src/prefs/customization/codeItemStyle.ts:15
 msgid "Code Item Style"
-msgstr "Codice Voce Stile"
+msgstr "Stile dell'elemento Codice"
 
 #: src/prefs/customization/codeItemStyle.ts:22
 #: src/prefs/customization/colorItemStyle.ts:22
@@ -130,11 +130,11 @@ msgstr "Puoi modificare la lunghezza dei caratteri del testo visibile nel corpo"
 
 #: src/prefs/customization/colorItemStyle.ts:15
 msgid "Change the style of the color item"
-msgstr "Cambia lo stile del colore dell'elemento"
+msgstr "Cambia lo stile dell'elemento Colore"
 
 #: src/prefs/customization/colorItemStyle.ts:15
 msgid "Color Item Style"
-msgstr "Stile colore elemento"
+msgstr "Stile dell'elemento Colore"
 
 #: src/prefs/customization/colorItemStyle.ts:42
 #: src/prefs/customization/imageItemStyle.ts:51
@@ -233,23 +233,23 @@ msgstr "Puoi cambiare il colore di sfondo della finestra di navigazione in incog
 
 #: src/prefs/customization/commonStyleGroup.ts:58
 msgid "Search Bar Font"
-msgstr "Font della barra di ricerca"
+msgstr "Carattere della barra di ricerca"
 
 #: src/prefs/customization/commonStyleGroup.ts:59
 msgid "You can change the font of the search bar"
-msgstr "Puoi cambiare il font della barra di ricerca"
+msgstr "Puoi cambiare il carattere della barra di ricerca"
 
 #: src/prefs/customization/commonStyleGroup.ts:65
 msgid "Item Title Font"
-msgstr "Font del titolo dell'elemento"
+msgstr "Carattere del titolo dell'elemento"
 
 #: src/prefs/customization/commonStyleGroup.ts:65
 msgid "You can change the font of the title"
-msgstr "Puoi cambiare il font del titolo"
+msgstr "Puoi cambiare il carattere del titolo"
 
 #: src/prefs/customization/commonStyleGroup.ts:68
 msgid "Item Date Font"
-msgstr "Data font elemento"
+msgstr "Carattere dell'elemento data"
 
 #: src/prefs/customization/commonStyleGroup.ts:68
 msgid "You can change the font of the date"
@@ -439,7 +439,7 @@ msgstr "Opzioni generali"
 
 #: src/prefs/general/historyLength.ts:15
 msgid "History Length"
-msgstr "Lunghezza della storia"
+msgstr "Lunghezza della cronologia"
 
 #: src/prefs/general/historyLength.ts:16
 msgid "You can limit your clipboard history length between 10 - 500"
@@ -539,55 +539,55 @@ msgstr "Sincronizza principale"
 msgid "Sync primary selection with clipboard selection"
 msgstr "Sincronizzare la selezione principale con la selezione degli Appunti"
 
-#: src/prefs/general/watchExclusions.ts:14
-msgid "Watch Exclusions"
-msgstr "Guarda le esclusioni"
-
 #: src/prefs/general/watchExclusions.ts:15
+msgid "Watch Exclusions"
+msgstr "Vedi le esclusioni"
+
+#: src/prefs/general/watchExclusions.ts:16
 msgid "When enabled, Pano will not track clipboard from excluded apps"
 msgstr "Se abilitato, Pano non tiene traccia degli appunti dalle app escluse"
 
 #: src/prefs/general/wiggleIndicator.ts:15
 msgid "Wiggle Indicator"
-msgstr ""
+msgstr "Scuoti l'indicatore"
 
 #: src/prefs/general/wiggleIndicator.ts:16
 msgid "Wiggles the indicator on panel"
-msgstr ""
+msgstr "Scuoti l'indicatore sul pannello"
 
-#: src/utils/panoItemFactory.ts:392
+#: src/utils/panoItemFactory.ts:406
 msgid "Image Copied"
 msgstr "Immagine copiata"
 
-#: src/utils/panoItemFactory.ts:393
+#: src/utils/panoItemFactory.ts:407
 msgid "Width: %spx, Height: %spx, Size: %s"
 msgstr "Larghezza: %spx, Altezza: %spx, Dimensione: %s"
 
-#: src/utils/panoItemFactory.ts:397
+#: src/utils/panoItemFactory.ts:411
 msgid "Text Copied"
 msgstr "Testo copiato"
 
-#: src/utils/panoItemFactory.ts:399
+#: src/utils/panoItemFactory.ts:413
 msgid "Code Copied"
 msgstr "Codice copiato"
 
-#: src/utils/panoItemFactory.ts:401
+#: src/utils/panoItemFactory.ts:415
 msgid "Emoji Copied"
 msgstr "Emoji Copiata"
 
-#: src/utils/panoItemFactory.ts:409
+#: src/utils/panoItemFactory.ts:423
 msgid "Link Copied"
 msgstr "Link copiato"
 
-#: src/utils/panoItemFactory.ts:429
+#: src/utils/panoItemFactory.ts:443
 msgid "Color Copied"
 msgstr "Colore copiato"
 
-#: src/utils/panoItemFactory.ts:436
+#: src/utils/panoItemFactory.ts:450
 msgid "File %s"
 msgstr "File %s"
 
-#: src/utils/panoItemFactory.ts:437
+#: src/utils/panoItemFactory.ts:451
 msgid "There are %s file(s)"
 msgstr "Ci sono %s file(s)"
 
@@ -619,6 +619,6 @@ msgstr "Codice"
 msgid "Color"
 msgstr "Colore"
 
-#: src/utils/ui.ts:24
+#: src/utils/ui.ts:27
 msgid "Pano"
 msgstr "Pano"

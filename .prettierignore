@@ -1,0 +1,5 @@
+.github/FUNDING.yml
+.github/pull_request_template.md
+.github/ISSUE_TEMPLATE/
+node_modules/
+*.md

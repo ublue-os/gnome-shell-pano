@@ -1,7 +1,7 @@
 import Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
+import type { ExtensionBase } from '@girs/gnome-shell/dist/extensions/sharedInternals';
 import GSound from '@girs/gsound-1.0';
-import { ExtensionBase, GetTextString } from '@gnome-shell/extensions/extension';
 
 export const logger =
   (prefix: string) =>
@@ -10,7 +10,7 @@ export const logger =
 
 const debug = logger('shell-utils');
 
-const deleteFile = (file: Gio.File) => {
+export const deleteFile = (file: Gio.File) => {
   return new Promise((resolve, reject) => {
     file.delete_async(GLib.PRIORITY_DEFAULT, null, (_file, res) => {
       try {
@@ -22,7 +22,7 @@ const deleteFile = (file: Gio.File) => {
   });
 };
 
-const deleteDirectory = async (file: Gio.File) => {
+export const deleteDirectory = async (file: Gio.File) => {
   try {
     const iter: Gio.FileEnumerator | undefined = await new Promise((resolve, reject) => {
       file.enumerate_children_async(
@@ -201,9 +201,9 @@ export const removeSoundContext = () => {
 
 export let debounceIds: number[] = [];
 
-export function debounce(func, wait) {
-  let sourceId;
-  return function (...args) {
+export function debounce<T extends any[]>(func: (...args: T) => void | Promise<void>, wait: number) {
+  let sourceId: null | number;
+  return function (...args: T) {
     const debouncedFunc = function (this: unknown) {
       debounceIds = debounceIds.filter((id) => id !== sourceId);
       sourceId = null;
@@ -229,6 +229,6 @@ export const openLinkInBrowser = (url: string) => {
   }
 };
 
-export function gettext(ext: ExtensionBase): (str: string) => GetTextString {
+export function gettext(ext: ExtensionBase): (str: string) => string {
   return ext.gettext.bind(ext);
 }

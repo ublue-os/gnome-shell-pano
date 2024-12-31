@@ -1,0 +1,53 @@
+name: Yarn CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    name: Yarn CI with Node ${{ matrix.node-version }}
+    runs-on: ubuntu-24.04
+
+    strategy:
+      matrix:
+        node-version:
+          - 20.x
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install -D
+
+      - name: Validate Formatting
+        run: yarn run prettier:check
+
+      - name: Validate Locale
+        run: yarn run check:locale
+
+      - name: Lint Extension
+        run: yarn run lint
+
+      - name: Build Extension
+        run: yarn run build
+
+      - name: Prepare Test Runner
+        run: |
+          sudo apt-get install meson gjs gir1.2-gda-5.0 gir1.2-gsound-1.0 -y
+          git clone https://github.com/ptomato/jasmine-gjs
+          cd jasmine-gjs
+          meson setup build
+          meson compile -C build
+          sudo meson install -C build
+
+      - name: Run Tests
+        run: yarn run test

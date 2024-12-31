@@ -1,8 +1,6 @@
 import Gda5 from '@girs/gda-5.0';
-import Gio from '@girs/gio-2.0';
-import { ExtensionBase } from '@gnome-shell/extensions/extension';
-import { add_expr_value } from '@pano/utils/compatibility';
-import { getCurrentExtensionSettings, getDbPath, logger } from '@pano/utils/shell';
+import { add_expr_value, type DataModelIter, type SqlBuilder, unescape_string } from '@pano/utils/compatibility';
+import { logger } from '@pano/utils/shell';
 
 const debug = logger('database');
 
@@ -15,9 +13,11 @@ export type DBItem = {
   copyDate: Date;
   isFavorite: boolean;
   matchValue: string;
-  searchValue?: string;
-  metaData?: string;
+  searchValue?: string | undefined;
+  metaData?: string | undefined;
 };
+
+export type SaveDBItem = Omit<DBItem, 'id'>;
 
 class ClipboardQuery {
   readonly statement: Gda5.Statement;
@@ -171,20 +171,18 @@ export class ClipboardQueryBuilder {
   }
 }
 class Database {
-  private connection: Gda5.Connection | null;
-  private settings: Gio.Settings;
+  private connection: Gda5.Connection | null = null;
 
-  private init(ext: ExtensionBase) {
-    this.settings = getCurrentExtensionSettings(ext);
+  private init(dbPath: string) {
     this.connection = new Gda5.Connection({
       provider: Gda5.Config.get_provider('SQLite'),
-      cnc_string: `DB_DIR=${getDbPath(ext)};DB_NAME=pano`,
+      cncString: `DB_DIR=${dbPath};DB_NAME=pano`,
     });
     this.connection.open();
   }
 
-  setup(ext: ExtensionBase) {
-    this.init(ext);
+  setup(dbPath: string) {
+    this.init(dbPath);
     if (!this.connection || !this.connection.is_opened()) {
       debug('connection is not opened');
       return;
@@ -209,7 +207,7 @@ class Database {
     `);
   }
 
-  save(dbItem: Omit<DBItem, 'id'>): DBItem | null {
+  save(dbItem: SaveDBItem): DBItem | null {
     if (!this.connection || !this.connection.is_opened()) {
       debug('connection is not opened');
       return null;
@@ -217,19 +215,20 @@ class Database {
 
     const builder = new Gda5.SqlBuilder({
       stmt_type: Gda5.SqlStatementType.INSERT,
-    });
+    }) as SqlBuilder<DBItem>;
 
     builder.set_table('clipboard');
-    builder.add_field_value_as_gvalue('itemType', dbItem.itemType as any);
-    builder.add_field_value_as_gvalue('content', dbItem.content as any);
-    builder.add_field_value_as_gvalue('copyDate', dbItem.copyDate.toISOString() as any);
-    builder.add_field_value_as_gvalue('isFavorite', +dbItem.isFavorite as any);
-    builder.add_field_value_as_gvalue('matchValue', dbItem.matchValue as any);
+    //Note: casting required, since this is a gjs convention, that you don't have to pass a  GObject.Value, this is needed for teh C API, but GJS constructs it on the fly
+    builder.add_field_value_as_gvalue('itemType', dbItem.itemType);
+    builder.add_field_value_as_gvalue('content', dbItem.content);
+    builder.add_field_value_as_gvalue('copyDate', dbItem.copyDate.toISOString());
+    builder.add_field_value_as_gvalue('isFavorite', +dbItem.isFavorite);
+    builder.add_field_value_as_gvalue('matchValue', dbItem.matchValue);
     if (dbItem.searchValue) {
-      builder.add_field_value_as_gvalue('searchValue', dbItem.searchValue as any);
+      builder.add_field_value_as_gvalue('searchValue', dbItem.searchValue);
     }
     if (dbItem.metaData) {
-      builder.add_field_value_as_gvalue('metaData', dbItem.metaData as any);
+      builder.add_field_value_as_gvalue('metaData', dbItem.metaData);
     }
     const [_, row] = this.connection.statement_execute_non_select(builder.get_statement(), null);
     const id = row?.get_nth_holder(0).get_value() as any as number;
@@ -256,19 +255,20 @@ class Database {
 
     const builder = new Gda5.SqlBuilder({
       stmt_type: Gda5.SqlStatementType.UPDATE,
-    });
+    }) as SqlBuilder<DBItem>;
 
     builder.set_table('clipboard');
-    builder.add_field_value_as_gvalue('itemType', dbItem.itemType as any);
-    builder.add_field_value_as_gvalue('content', dbItem.content as any);
-    builder.add_field_value_as_gvalue('copyDate', dbItem.copyDate.toISOString() as any);
-    builder.add_field_value_as_gvalue('isFavorite', +dbItem.isFavorite as any);
-    builder.add_field_value_as_gvalue('matchValue', dbItem.matchValue as any);
+    //Note: casting required, since this is a gjs convention, that you don't have to pass a  GObject.Value, this is needed for teh C API, but GJS constructs it on the fly
+    builder.add_field_value_as_gvalue('itemType', dbItem.itemType);
+    builder.add_field_value_as_gvalue('content', dbItem.content);
+    builder.add_field_value_as_gvalue('copyDate', dbItem.copyDate.toISOString());
+    builder.add_field_value_as_gvalue('isFavorite', +dbItem.isFavorite);
+    builder.add_field_value_as_gvalue('matchValue', dbItem.matchValue);
     if (dbItem.searchValue) {
-      builder.add_field_value_as_gvalue('searchValue', dbItem.searchValue as any);
+      builder.add_field_value_as_gvalue('searchValue', dbItem.searchValue);
     }
     if (dbItem.metaData) {
-      builder.add_field_value_as_gvalue('metaData', dbItem.metaData as any);
+      builder.add_field_value_as_gvalue('metaData', dbItem.metaData);
     }
     builder.set_where(
       builder.add_cond(
@@ -314,27 +314,31 @@ class Database {
 
     const dm = this.connection.statement_execute_select(clipboardQuery.statement, null);
 
-    const iter = dm.create_iter();
+    const iter = dm.create_iter() as DataModelIter<DBItem>;
     const itemList: DBItem[] = [];
 
     while (iter.move_next()) {
-      const id = iter.get_value_for_field('id') as any as number;
-      const itemType = iter.get_value_for_field('itemType') as any as ItemType;
-      const content = iter.get_value_for_field('content') as any as string;
-      const copyDate = iter.get_value_for_field('copyDate') as any as string;
-      const isFavorite = iter.get_value_for_field('isFavorite') as any as string;
-      const matchValue = iter.get_value_for_field('matchValue') as any as string;
-      const searchValue = iter.get_value_for_field('searchValue') as any as string;
-      const metaData = iter.get_value_for_field('metaData') as any as string;
+      //Note: casting required, since this is a gjs convention, that any GObject.Value is just the value (e.g. string, number etc.) this types are from C, so there is no dynamic return value so they have to use GObject.Value
+      const id = iter.get_value_for_field('id');
+      const itemType = iter.get_value_for_field('itemType');
+      const content = iter.get_value_for_field('content');
+      const contentUnescaped = unescape_string(content) ?? content;
+      const copyDate = iter.get_value_for_field('copyDate');
+      const isFavorite = iter.get_value_for_field('isFavorite');
+      const matchValue = iter.get_value_for_field('matchValue');
+      const matchValueUnescaped = unescape_string(matchValue) ?? matchValue;
+      const searchValue = iter.get_value_for_field('searchValue');
+      const searchValueUnescaped = searchValue ? (unescape_string(searchValue) ?? searchValue) : undefined;
+      const metaData = iter.get_value_for_field('metaData');
 
       itemList.push({
         id,
         itemType,
-        content,
+        content: contentUnescaped,
         copyDate: new Date(copyDate),
         isFavorite: !!isFavorite,
-        matchValue,
-        searchValue,
+        matchValue: matchValueUnescaped,
+        searchValue: searchValueUnescaped,
         metaData,
       });
     }
@@ -342,9 +346,9 @@ class Database {
     return itemList;
   }
 
-  start(ext: ExtensionBase) {
-    if (!this.connection) {
-      this.init(ext);
+  start(dbPath: string) {
+    if (!this.connection && dbPath) {
+      this.init(dbPath);
     }
 
     if (this.connection && !this.connection.is_opened()) {

@@ -84,7 +84,7 @@
 
 ### Legacy versions
 
-Since Gnome 45 we had to break compatibility with previous Gnome versions, these only receive critical bug / security fixes and ar not maintained actively
+Since Gnome 45 we had to break compatibility with previous Gnome versions, these only receive critical bug / security fixes and are not maintained actively. See [here](https://github.com/oae/gnome-shell-pano/tree/legacy)
 
 - Gnome Shell 42
 - Gnome Shell 43
@@ -93,7 +93,8 @@ Since Gnome 45 we had to break compatibility with previous Gnome versions, these
 ### Current version
 
 - Gnome Shell 45
-
+- Gnome Shell 46
+- Gnome Shell 47
 
 ## Installation
 
@@ -106,10 +107,10 @@ Since Gnome 45 we had to break compatibility with previous Gnome versions, these
     sudo dnf install libgda libgda-sqlite
     ```
 
-  - Arch Linux (For gnome-43 or later, you need libgda6)
+  - Arch Linux
 
     ```bash
-    sudo pacman -S libgda
+    sudo pacman -S libgda6
     ```
 
   - Ubuntu/Debian
@@ -160,10 +161,6 @@ busctl --user call org.gnome.Shell /io/elhan/Pano io.elhan.Pano show # shows pan
 ```
 
 ## Development
-
-### Dependencies
-
-- Fedora: `sudo dnf install cogl-devel gsound-devel libgda-devel`
 
 ### Build
 
